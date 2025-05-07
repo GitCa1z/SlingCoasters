@@ -7,6 +7,8 @@ TagManager:
   - KartSeat
   - Gun
   - Bullet
+  - GameLoop
+  - Kart
   layers:
   - Default
   - TransparentFX

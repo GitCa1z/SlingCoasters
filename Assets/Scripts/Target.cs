@@ -1,8 +1,17 @@
+using System.Collections.Generic;
 using UnityEngine;
 
 public class Target : MonoBehaviour
 {
     public float rotationSpeed;
+    public float timeBonus = 5f;
+    private KartMovement kartMovement;
+
+
+    private void Awake()
+    {
+     kartMovement = GameObject.FindGameObjectWithTag("Kart").GetComponent<KartMovement>();
+    }
 
     void Update()
     {
@@ -13,9 +22,20 @@ public class Target : MonoBehaviour
     {
         if (other.gameObject.CompareTag("Bullet"))
         {
+            
             PointManager.instance.IncrementCounter();
-            Destroy(gameObject);
+            kartMovement.updateSpeed(50);
+           
             print("Hit!");
+
+            GameTimer timer = FindObjectOfType<GameTimer>();
+
+            if (timer != null)
+            {
+                timer.AddTime(timeBonus);
+            }
+            Destroy(other.gameObject);
+            Destroy(gameObject);
         }
     }
 }

@@ -1,20 +1,25 @@
 using System.Collections;
 using Unity.Mathematics;
-using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.Splines;
 
 public class KartMovement : MonoBehaviour
 {
+    private SplineAnimate splineAnimate;
+    public float KartSpeed; // Initial speed set in the inspector
+    public float transitionSpeed = 2f; // Speed of the smooth transition
 
-    SplineAnimate splineAnimate; // gets animate component from spline
-    [SerializeField] float KartSpeed; // kartspeed variable
-    bool hasStarted;
+    private float currentSpeed;
+    private float targetSpeed;
+    private bool hasStarted;
+
 
     private void Start()
     {
         splineAnimate = GetComponent<SplineAnimate>();
-
+        splineAnimate.MaxSpeed = 500;
+        currentSpeed = KartSpeed * Time.deltaTime;
+        targetSpeed = currentSpeed;
     }
 
     private void Update()
@@ -23,8 +28,16 @@ public class KartMovement : MonoBehaviour
         {
             hasStarted = true;
             splineAnimate.Play();
-            splineAnimate.MaxSpeed = KartSpeed * Time.deltaTime;
         }
 
+        // Smoothly move currentSpeed toward targetSpeed
+        currentSpeed = Mathf.Lerp(currentSpeed, targetSpeed, Time.deltaTime * transitionSpeed);
+        splineAnimate.MaxSpeed = currentSpeed;
+    }
+
+    public void updateSpeed(float speed)
+    {
+        // Increase target speed gradually
+        targetSpeed += speed * Time.deltaTime;
     }
 }
